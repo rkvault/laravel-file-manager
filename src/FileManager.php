@@ -158,7 +158,7 @@ class FileManager
      */
     public function upload($disk, $path, $files, $overwrite): array
     {
-        $fileNotUploaded = false;
+        $fileNotUploaded = [];
 
         foreach ($files as $file) {
             // skip or overwrite files
@@ -170,7 +170,10 @@ class FileManager
             if ($this->configRepository->getMaxUploadFileSize()
                 && $file->getSize() / 1024 > $this->configRepository->getMaxUploadFileSize()
             ) {
-                $fileNotUploaded = true;
+                $fileNotUploaded[] = __(':file was larger than the upload limit of :size MB.', [
+                    'file' => $file->getClientOriginalName(),
+                    'size' => round($this->configRepository->getMaxUploadFileSize() / 1024, 2),
+                ]);
                 continue;
             }
 
@@ -181,7 +184,7 @@ class FileManager
                     $this->configRepository->getAllowFileTypes()
                 )
             ) {
-                $fileNotUploaded = true;
+                $fileNotUploaded[] = __(':file is not an allowed type.');
                 continue;
             }
 
@@ -207,7 +210,7 @@ class FileManager
             return [
                 'result' => [
                     'status'  => 'warning',
-                    'message' => 'notAllUploaded',
+                    'message' => 'Not all files were uploaded: ' . implode(' ', $fileNotUploaded),
                 ],
             ];
         }
