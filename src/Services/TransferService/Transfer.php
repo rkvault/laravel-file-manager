@@ -48,7 +48,11 @@ abstract class Transfer
         return [
             'result' => [
                 'status'  => 'success',
-                'message' => 'copied',
+                'message' => match($this->clipboard['type']) {
+                    'copy' => 'copied',
+                    'cut' => 'cut',
+                    default => \Str::plural($this->clipboard['type'], 2),
+                },
             ],
         ];
     }
