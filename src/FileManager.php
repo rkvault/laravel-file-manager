@@ -184,7 +184,9 @@ class FileManager
                     $this->configRepository->getAllowFileTypes()
                 )
             ) {
-                $fileNotUploaded[] = __(':file is not an allowed type.');
+                $fileNotUploaded[] = __(':file is not an allowed type.', [
+                    'file' => $file->getClientOriginalName(),
+                ]);
                 continue;
             }
 
@@ -209,7 +211,7 @@ class FileManager
         if ($fileNotUploaded) {
             return [
                 'result' => [
-                    'status'  => 'warning',
+                    'status'  => 'error',
                     'message' => 'Not all files were uploaded: ' . implode(' ', $fileNotUploaded),
                 ],
             ];
