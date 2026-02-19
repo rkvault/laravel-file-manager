@@ -211,7 +211,7 @@ class FileManager
         if ($fileNotUploaded) {
             return [
                 'result' => [
-                    'status'  => 'error',
+                    'status'  => 'warning',
                     'message' => 'Not all files were uploaded: ' . implode(' ', $fileNotUploaded),
                 ],
             ];
